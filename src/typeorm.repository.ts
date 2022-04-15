@@ -32,7 +32,8 @@ export class TypeormRepository<
       TEntitySchema
     >,
     protected readonly entityType: ObjectType<TEntitySchema>,
-    protected readonly logger: Logger
+    protected readonly logger: Logger,
+    protected readonly asyncDomainEvents?: boolean
   ) {
     this.readRepository = new TypeormReadRepository(
       entityModel,
@@ -44,7 +45,8 @@ export class TypeormRepository<
       entityModel,
       entitySchemaFactory,
       entityType,
-      logger
+      logger,
+      asyncDomainEvents
     );
   }
 

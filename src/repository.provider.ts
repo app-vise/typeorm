@@ -22,7 +22,8 @@ export class TypeormRepositoryProvider {
   >(
     repository: TRepository,
     schemaType: Type<TEntitySchema>,
-    schemaFactory: TEntitySchemaFactory
+    schemaFactory: TEntitySchemaFactory,
+    asyncDomainEvents?: boolean
   ) {
     return {
       provide: repository,
@@ -48,7 +49,8 @@ export class TypeormRepositoryProvider {
             connection.getRepository(schemaType),
             schemaFactory,
             schemaType,
-            logger
+            logger,
+            asyncDomainEvents
           );
         }
 
@@ -57,7 +59,8 @@ export class TypeormRepositoryProvider {
           connection.getRepository(schemaType),
           schemaFactory,
           schemaType,
-          logger
+          logger,
+          asyncDomainEvents
         );
       },
       inject: [DataSource, Logger],

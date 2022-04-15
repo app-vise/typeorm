@@ -34,7 +34,8 @@ export class TypeormWriteRepository<
       TEntitySchema
     >,
     protected readonly entityType: ObjectType<TEntitySchema>,
-    protected readonly logger: Logger
+    protected readonly logger: Logger,
+    protected readonly asyncDomainEvents?: boolean
   ) {}
 
   async existsById(id: string): Promise<boolean> {
@@ -123,7 +124,8 @@ export class TypeormWriteRepository<
         entity.id,
         entity.constructor.name,
         this.logger,
-        this.correlationId
+        this.correlationId,
+        this.asyncDomainEvents
       );
 
       return domainObject ?? this.entitySchemaFactory.toDomain(result);
@@ -163,7 +165,8 @@ export class TypeormWriteRepository<
       entity.id,
       entity.constructor.name,
       this.logger,
-      this.correlationId
+      this.correlationId,
+      this.asyncDomainEvents
     );
 
     this.logger.debug(
