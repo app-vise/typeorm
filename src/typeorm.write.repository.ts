@@ -101,7 +101,9 @@ export class TypeormWriteRepository<
       // TODO: Fix DeepPartial ts-error
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      let result = await this.entityModel.save(ormEntity);
+      const result = await this.entityModel.save(ormEntity);
+
+      let domainObject: TEntity | undefined;
 
       // TODO: Fix in some other way without extra database call
       // Not entire model is automatically returned on save
@@ -110,7 +112,7 @@ export class TypeormWriteRepository<
       if (reload) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        result = await this.entityModel.findOne(entity.id.value);
+        domainObject = await this.findOneById(entity.id.value);
       }
 
       this.logger.debug(
@@ -124,9 +126,7 @@ export class TypeormWriteRepository<
         this.correlationId
       );
 
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      return this.entitySchemaFactory.toDomain(result);
+      return domainObject ?? this.entitySchemaFactory.toDomain(result);
     } catch (error) {
       // Handle reference errors with our custom DomainException
       if (error instanceof QueryFailedError) {
