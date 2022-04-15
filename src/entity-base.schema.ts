@@ -1,7 +1,7 @@
 import { CreateDateColumn, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
 export abstract class EntityBaseSchema {
-  protected constructor(props?: unknown) {
+  constructor(props?: unknown) {
     if (props) {
       Object.assign(this, props);
     }
