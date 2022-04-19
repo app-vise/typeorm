@@ -71,9 +71,9 @@ export class QueryHelper {
             const parameters: ObjectLiteral = { [paramName]: filterValue };
 
             qb.andWhere(where, parameters);
+          } else {
+            throw new Error(`Unknown filter type: ${filter.constructor.name}`);
           }
-
-          throw new Error(`Unknown filter type: ${filter.constructor.name}`);
         }
       }
     });
