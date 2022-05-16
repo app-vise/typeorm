@@ -161,6 +161,8 @@ export class TypeormWriteRepository<
   async delete(entity: TEntity): Promise<void> {
     entity.validate();
 
+    await this.entityModel.remove(this.entitySchemaFactory.toSchema(entity));
+
     await DomainEvents.publishEvents(
       entity.id,
       entity.constructor.name,
@@ -172,8 +174,6 @@ export class TypeormWriteRepository<
     this.logger.debug(
       `[${entity.constructor.name}] deleted ${entity.id.value}`
     );
-
-    await this.entityModel.remove(this.entitySchemaFactory.toSchema(entity));
   }
 
   protected correlationId?: string;
