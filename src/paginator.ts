@@ -55,11 +55,14 @@ export class Paginator<TEntitySchema extends EntityBaseSchema> {
       entities.reverse();
     }
 
-    if (this.hasBeforeCursor() || hasMore) {
+    if (entities.length > 0 && (this.hasBeforeCursor() || hasMore)) {
       this.endCursor = this.encode(entities[entities.length - 1]);
     }
 
-    if (this.hasAfterCursor() || (hasMore && this.hasBeforeCursor())) {
+    if (
+      entities.length > 0 &&
+      (this.hasAfterCursor() || (hasMore && this.hasBeforeCursor()))
+    ) {
       this.startCursor = this.encode(entities[0]);
     }
 
