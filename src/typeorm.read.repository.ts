@@ -68,7 +68,9 @@ export class TypeormReadRepository<
       if (
         // Ignore soft relations starting with _
         relation.propertyPath[0] !== '_' &&
-        (!selectionSet || selectionSet.isSelected('nodes.' + camelCaseRelation))
+        (!selectionSet ||
+          selectionSet.isSelected('nodes.' + camelCaseRelation) ||
+          selectionSet.isSelected('edges.node.' + camelCaseRelation))
       ) {
         queryBuilder.leftJoinAndSelect(
           `${this.entityType.name}.${relation.propertyPath}`,
