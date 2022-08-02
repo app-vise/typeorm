@@ -39,40 +39,42 @@ export class QueryHelper {
             'gte' = '>=',
           }
 
-          let selectedFilterType: string | null = null;
-          let filterValue = null;
-
           for (const filterType in filterTypes) {
+            let selectedFilterType: string | null = null;
+            let filterValue = null;
+
             if (filter[filterType] != null) {
               selectedFilterType = filterType;
               filterValue = filter[filterType];
             }
-          }
 
-          if (selectedFilterType != null && filterValue != null) {
-            // Convert filter keys because field names are in snake case
-            const snakeKey = camelToSnakeCase(key);
+            if (selectedFilterType != null && filterValue != null) {
+              // Convert filter keys because field names are in snake case
+              const snakeKey = camelToSnakeCase(key);
 
-            // Parameter must be unique
-            const paramName = `${snakeKey}_${Math.round(
-              Math.random() * 100000000
-            )}`;
+              // Parameter must be unique
+              const paramName = `${snakeKey}_${Math.round(
+                Math.random() * 100000000
+              )}`;
 
-            if (['contains', 'excludes'].includes(selectedFilterType)) {
-              filterValue = `%${filterValue}%`;
+              if (['contains', 'excludes'].includes(selectedFilterType)) {
+                filterValue = `%${filterValue}%`;
+              }
+
+              // TODO: Fix ts-error
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              const operator = filterTypes[selectedFilterType];
+
+              const where = `${builder.alias}.${snakeKey} ${operator} :${paramName}`;
+              const parameters: ObjectLiteral = { [paramName]: filterValue };
+
+              qb.andWhere(where, parameters);
+            } else {
+              throw new Error(
+                `Unknown filter type: ${filter.constructor.name}`
+              );
             }
-
-            // TODO: Fix ts-error
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            const operator = filterTypes[selectedFilterType];
-
-            const where = `${builder.alias}.${snakeKey} ${operator} :${paramName}`;
-            const parameters: ObjectLiteral = { [paramName]: filterValue };
-
-            qb.andWhere(where, parameters);
-          } else {
-            throw new Error(`Unknown filter type: ${filter.constructor.name}`);
           }
         }
       }
