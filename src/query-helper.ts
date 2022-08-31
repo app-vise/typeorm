@@ -32,6 +32,7 @@ export class QueryHelper {
           enum filterTypes {
             'equals' = '=',
             'contains' = 'LIKE',
+            'iContains' = 'ILIKE',
             'excludes' = 'NOT LIKE',
             'lt' = '<',
             'lte' = '<=',
@@ -57,7 +58,11 @@ export class QueryHelper {
                 Math.random() * 100000000
               )}`;
 
-              if (['contains', 'excludes'].includes(selectedFilterType)) {
+              if (
+                ['contains', 'iContains', 'excludes'].includes(
+                  selectedFilterType
+                )
+              ) {
                 filterValue = `%${filterValue}%`;
               }
 
