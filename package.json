@@ -39,8 +39,8 @@
   },
   "homepage": "https://github.com/app-vise/typeorm#readme",
   "dependencies": {
-    "@appvise/domain": "^1.0.7",
-    "typeorm": "^0.3.6"
+    "@appvise/domain": "^1.0.10",
+    "typeorm": "^0.3.10"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.3",
