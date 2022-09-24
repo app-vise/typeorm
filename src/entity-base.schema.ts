@@ -1,7 +1,7 @@
-import { CreateDateColumn, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import { PrimaryColumn } from 'typeorm';
 
 export abstract class EntityBaseSchema {
-  constructor(props?: unknown) {
+  protected constructor(props?: unknown) {
     if (props) {
       Object.assign(this, props);
     }
@@ -9,10 +9,4 @@ export abstract class EntityBaseSchema {
 
   @PrimaryColumn({ update: false })
   readonly id!: string;
-
-  @CreateDateColumn({ type: 'timestamp', update: false })
-  readonly created_at!: Date;
-
-  @UpdateDateColumn({ type: 'timestamp' })
-  readonly updated_at!: Date;
 }

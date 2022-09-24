@@ -1,11 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CreateEntityProps, DateVO, Entity, ID } from '@appvise/domain';
+import { CreateEntityProps, Entity, ID } from '@appvise/domain';
 import { EntityBaseSchema } from './entity-base.schema';
 
-export type EntitySchemaProps<TEntitySchema> = Omit<
-  TEntitySchema,
-  'id' | 'created_at' | 'updated_at'
->;
+export type EntitySchemaProps<TEntitySchema> = Omit<TEntitySchema, 'id'>;
 
 export interface EntityProps<TEntityProps> {
   id: ID;
@@ -33,13 +30,9 @@ export abstract class EntitySchemaFactory<
 
   toDomain(entitySchema: TEntitySchema): TEntity {
     const { id, props } = this.toDomainProps(entitySchema);
-    const entitySchemaBase: EntityBaseSchema =
-      entitySchema as unknown as EntityBaseSchema;
     return new this.entityConstructor({
       id,
       props,
-      createdAt: new DateVO(entitySchemaBase.created_at),
-      updatedAt: new DateVO(entitySchemaBase.updated_at),
     });
   }
 
@@ -48,8 +41,6 @@ export abstract class EntitySchemaFactory<
     return new this.entitySchemaConstructor({
       ...props,
       id: entity.id.value,
-      created_at: entity.createdAt.value,
-      updated_at: entity.updatedAt.value,
     });
   }
 }
