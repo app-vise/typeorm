@@ -1,6 +1,6 @@
 import { PrimaryColumn } from 'typeorm';
 
-export abstract class BareEntityBaseSchema {
+export abstract class BareEntitySchema {
   constructor(props?: unknown) {
     if (props) {
       Object.assign(this, props);

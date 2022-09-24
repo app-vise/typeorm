@@ -1,4 +1,4 @@
-export * from './bare-entity-base.schema';
+export * from './bare-entity.schema';
 export * from './bare-entity-schema.factory';
 export * from './entity-schema.factory';
 export * from './entity-base.schema';

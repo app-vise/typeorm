@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CreateEntityProps, Entity, ID } from '@appvise/domain';
-import { BareEntityBaseSchema } from './bare-entity-base.schema';
+import { BareEntitySchema } from './bare-entity.schema';
 
 export type BareEntitySchemaProps<TEntitySchema> = Omit<TEntitySchema, 'id'>;
 
@@ -11,7 +11,7 @@ export interface BareEntityProps<TEntityProps> {
 
 export abstract class BareEntitySchemaFactory<
   TEntity extends Entity<unknown>,
-  TEntitySchema extends BareEntityBaseSchema
+  TEntitySchema extends BareEntitySchema
 > {
   constructor(
     private entityConstructor: new (props: CreateEntityProps<any>) => TEntity,
