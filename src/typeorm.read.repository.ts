@@ -49,6 +49,11 @@ export class TypeormReadRepository<
       request.sort.push({ field: 'id', direction: SortDirection.asc });
     }
 
+    if (request.sort.length === 1 && request.sort[0].field !== 'id') {
+      // Add id as secondary order to serve as a tie-breaker for sorting
+      request.sort.push({ field: 'id', direction: SortDirection.asc });
+    }
+
     // Create QueryBuilder
     const queryBuilder = this.entityModel.createQueryBuilder(
       this.entityType.name
