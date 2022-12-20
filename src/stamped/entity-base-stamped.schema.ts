@@ -1,5 +1,5 @@
 import { CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { EntityBaseSchema } from './entity-base.schema';
+import { EntityBaseSchema } from '..';
 
 export class EntityBaseStampedSchema extends EntityBaseSchema {
   constructor(props?: Record<string, unknown>) {

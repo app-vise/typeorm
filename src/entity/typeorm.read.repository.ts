@@ -17,7 +17,7 @@ import {
   Paginator,
   camelToSnakeCase,
   snakeToCamelCase,
-} from '.';
+} from '../index';
 
 export class TypeormReadRepository<
   TEntity extends AggregateRoot<unknown> | Entity<unknown>,

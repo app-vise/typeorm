@@ -11,15 +11,15 @@ import {
   WriteRepository,
 } from '@appvise/domain';
 import {
-  EntityBaseSchema,
-  EntitySchemaFactory,
-  TypeormReadRepository,
-  TypeormWriteRepository,
-} from '.';
+  EntityBaseStampedSchema,
+  EntityStampedSchemaFactory,
+  TypeormStampedReadRepository,
+  TypeormStampedWriteRepository,
+} from '../index';
 
-export class TypeormRepository<
+export class TypeormStampedRepository<
   TEntity extends AggregateRoot<unknown> | Entity<unknown>,
-  TEntitySchema extends EntityBaseSchema
+  TEntitySchema extends EntityBaseStampedSchema
 > implements Repository<TEntity>
 {
   private readonly readRepository: ReadRepository<TEntity>;
@@ -27,7 +27,7 @@ export class TypeormRepository<
 
   constructor(
     protected readonly entityModel: BaseRepository<TEntitySchema>,
-    protected readonly entitySchemaFactory: EntitySchemaFactory<
+    protected readonly entitySchemaFactory: EntityStampedSchemaFactory<
       TEntity,
       TEntitySchema
     >,
@@ -35,13 +35,13 @@ export class TypeormRepository<
     protected readonly logger: Logger,
     protected readonly asyncDomainEvents?: boolean
   ) {
-    this.readRepository = new TypeormReadRepository(
+    this.readRepository = new TypeormStampedReadRepository(
       entityModel,
       entitySchemaFactory,
       entityType
     );
 
-    this.writeRepository = new TypeormWriteRepository(
+    this.writeRepository = new TypeormStampedWriteRepository(
       entityModel,
       entitySchemaFactory,
       entityType,

@@ -1,28 +1,27 @@
 import { AggregateRoot, Entity, Logger } from '@appvise/domain';
-import {
-  EntitySchemaFactory,
-  EntityBaseSchema,
-  TypeormReadRepository,
-  TypeormRepository,
-  TypeormWriteRepository,
-} from '.';
 import { DataSource } from 'typeorm';
+import {
+  EntityStampedSchemaFactory,
+  EntityBaseStampedSchema,
+  TypeormStampedReadRepository,
+  TypeormStampedRepository,
+  TypeormStampedWriteRepository,
+  Type,
+} from '../index';
 
-// instead of import { Type } from '@nestjs/common';
-export interface Type<T = any> extends Function {
-  new (...args: any[]): T;
-}
-
-export class TypeormRepositoryProvider {
+export class TypeormStampedRepositoryProvider {
   static provide<
     TRepository,
     TEntity extends AggregateRoot<unknown> | Entity<unknown>,
-    TEntitySchema extends EntityBaseSchema,
-    TEntitySchemaFactory extends EntitySchemaFactory<TEntity, TEntitySchema>
+    TEntitySchema extends EntityBaseStampedSchema,
+    TEntityStampedSchemaFactory extends EntityStampedSchemaFactory<
+      TEntity,
+      TEntitySchema
+    >
   >(
     repository: TRepository,
     schemaType: Type<TEntitySchema>,
-    schemaFactory: TEntitySchemaFactory,
+    schemaFactory: TEntityStampedSchemaFactory,
     asyncDomainEvents?: boolean
   ) {
     return {
@@ -33,7 +32,7 @@ export class TypeormRepositoryProvider {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         if (repository.toString().includes('ReadRepository')) {
-          return new TypeormReadRepository<TEntity, TEntitySchema>(
+          return new TypeormStampedReadRepository<TEntity, TEntitySchema>(
             connection.getRepository(schemaType),
             schemaFactory,
             schemaType
@@ -45,7 +44,7 @@ export class TypeormRepositoryProvider {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         if (repository.toString().includes('WriteRepository')) {
-          return new TypeormWriteRepository<TEntity, TEntitySchema>(
+          return new TypeormStampedWriteRepository<TEntity, TEntitySchema>(
             connection.getRepository(schemaType),
             schemaFactory,
             schemaType,
@@ -55,7 +54,7 @@ export class TypeormRepositoryProvider {
         }
 
         // Otherwise, return read + write combined repository
-        return new TypeormRepository<TEntity, TEntitySchema>(
+        return new TypeormStampedRepository<TEntity, TEntitySchema>(
           connection.getRepository(schemaType),
           schemaFactory,
           schemaType,

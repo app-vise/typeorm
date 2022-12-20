@@ -20,7 +20,7 @@ import {
   EntityBaseSchema,
   convertDriverForeignKeyError,
   snakeToCamelCase,
-} from '.';
+} from '../index';
 
 export class TypeormWriteRepository<
   TEntity extends AggregateRoot<unknown> | Entity<unknown>,
