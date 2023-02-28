@@ -8,6 +8,21 @@ export class QueryHelper {
     filters: FilterType,
     builder: SelectQueryBuilder<TEntitySchema>
   ): Brackets {
+    // Transform nested filters to use join aliases
+    let key, filter;
+
+    for ([key, filter] of Object.entries(filters)) {
+      for (const [filterKey, filterEntry] of Object.entries(filter)) {
+        if (typeof filterEntry === 'object') {
+          // Add nested filters to root filter
+          filters[`${key}.${filterKey}`] = filterEntry;
+
+          // Delete original nested filter
+          delete filters[key];
+        }
+      }
+    }
+
     return new Brackets((qb) => {
       for (const [key, filter] of Object.entries(filters)) {
         if (key === 'AND' || key === 'OR') {
@@ -71,7 +86,12 @@ export class QueryHelper {
               // @ts-ignore
               const operator = filterTypes[selectedFilterType];
 
-              const where = `${builder.alias}.${snakeKey} ${operator} :${paramName}`;
+              // Use JOIN alias for nested filters
+              const fieldKey = snakeKey.includes('.')
+                ? snakeKey // Use JOIN alias
+                : `${builder.alias}.${snakeKey}`; // Use root alias;
+
+              const where = `${fieldKey} ${operator} :${paramName}`;
               const parameters: ObjectLiteral = { [paramName]: filterValue };
 
               qb.andWhere(where, parameters);
