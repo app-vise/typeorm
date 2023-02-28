@@ -1,3 +1,5 @@
+import { DateTimeFilter } from "./util.types";
+
 export function camelToSnakeCase(str: string) {
   return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
 }
@@ -131,4 +133,11 @@ export function convertDriverForeignKeyError(driverError: any): string {
   }
 
   return reference !== '' ? ` to \`${reference}\`` : '';
+}
+
+export function getDateFilter(dateFilter?: DateTimeFilter) {
+  if (!dateFilter) return {};
+    return {
+      createdAt: { gte: dateFilter.startDate, lte: dateFilter.endDate },
+    };
 }
