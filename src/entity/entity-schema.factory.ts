@@ -14,8 +14,8 @@ export abstract class EntitySchemaFactory<
   TEntitySchema extends EntityBaseSchema
 > {
   constructor(
-    private entityConstructor: new (props: CreateEntityProps<any>) => TEntity,
-    private entitySchemaConstructor: new (
+    protected entityConstructor: new (props: CreateEntityProps<any>) => TEntity,
+    protected entitySchemaConstructor: new (
       props: EntitySchemaProps<TEntitySchema>
     ) => TEntitySchema
   ) {}
