@@ -13,7 +13,7 @@ export class QueryHelper {
 
     for ([key, filter] of Object.entries(filters)) {
       for (const [filterKey, filterEntry] of Object.entries(filter)) {
-        if (typeof filterEntry === 'object') {
+        if (!['AND', 'OR'].includes(key) && typeof filterEntry === 'object') {
           // Add nested filters to root filter
           filters[`${key}.${filterKey}`] = filterEntry;
 
