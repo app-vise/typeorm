@@ -112,10 +112,16 @@ export class Paginator<TEntitySchema extends EntityBaseSchema> {
     const operator = this.getOperator();
     const params: CursorParam = {};
     let query = '';
+
     this.paginationKeys.forEach((key) => {
+      // Use JOIN alias for nested fields
+      const fieldKey = key.includes('.')
+        ? key // Use JOIN alias
+        : `${this.alias}.${key}`; // Use root alias;
+
       params[key] = cursors[key];
-      where.orWhere(`${query}${this.alias}.${key} ${operator} :${key}`, params);
-      query = `${query}${this.alias}.${key} = :${key} AND `;
+      where.orWhere(`${query}${fieldKey} ${operator} :${key}`, params);
+      query = `${query}${fieldKey} = :${key} AND `;
     });
   }
 
@@ -139,8 +145,14 @@ export class Paginator<TEntitySchema extends EntityBaseSchema> {
     }
 
     const orderByCondition: OrderByCondition = {};
+
     this.paginationKeys.forEach((key) => {
-      orderByCondition[`${this.alias}.${key}`] =
+      // Use JOIN alias for nested filters
+      const fieldKey = key.includes('.')
+        ? key // Use JOIN alias
+        : `${this.alias}.${key}`; // Use root alias;
+
+      orderByCondition[`${fieldKey}`] =
         direction === SortDirection.desc ? 'DESC' : 'ASC';
     });
 
@@ -158,9 +170,19 @@ export class Paginator<TEntitySchema extends EntityBaseSchema> {
   private encode(entity: TEntitySchema): string {
     const payload = this.paginationKeys
       .map((key) => {
+        const subKeys: string[] = key.split('.');
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        let value = entity[subKeys[0]];
+
+        if (subKeys.length === 2) {
+          value = value[subKeys[1]];
+        }
+
         const type = this.getEntityPropertyType(key);
-        const value = encodeByType(type, entity[key]);
-        return `${key}:${value}`;
+        const encodedValue = encodeByType(type, value);
+
+        return `${key}:${encodedValue}`;
       })
       .join(',');
 
@@ -173,6 +195,7 @@ export class Paginator<TEntitySchema extends EntityBaseSchema> {
     columns.forEach((column) => {
       const [key, raw] = column.split(':');
       const type = this.getEntityPropertyType(key);
+
       cursors[key] = decodeByType(type, raw);
     });
 
@@ -180,11 +203,24 @@ export class Paginator<TEntitySchema extends EntityBaseSchema> {
   }
 
   private getEntityPropertyType(key: string): string {
-    return Reflect.getMetadata(
+    const subKeys: string[] = key.split('.');
+
+    let metadata = Reflect.getMetadata(
       'design:type',
       this.entity.prototype,
-      key
-    ).name.toLowerCase();
+      subKeys[0]
+    );
+
+    // Get type from relation
+    if (subKeys.length === 2) {
+      metadata = Reflect.getMetadata(
+        'design:type',
+        metadata.prototype,
+        subKeys[1]
+      );
+    }
+
+    return metadata.name.toLowerCase();
   }
 
   private static flipDirection(direction: SortDirection): SortDirection {
