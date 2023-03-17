@@ -37,8 +37,7 @@ export class TypeormReadRepository<
 
   async find(
     request: SearchRequest,
-    selectionSet?: SelectionSet,
-    initialQueryBuilder?: SelectQueryBuilder<TEntitySchema>
+    selectionSet?: SelectionSet
   ): Promise<SearchResponse<TEntity>> {
     // Make sure at least 1 sort field is present
     if (!request.sort) {
@@ -56,9 +55,9 @@ export class TypeormReadRepository<
     }
 
     // Create QueryBuilder
-    const queryBuilder =
-      initialQueryBuilder ??
-      this.entityModel.createQueryBuilder(this.entityType.name);
+    const queryBuilder = this.entityModel.createQueryBuilder(
+      this.entityType.name
+    );
 
     // Add nested filters
     const expressions = QueryHelper.addFilters(

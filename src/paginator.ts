@@ -36,11 +36,15 @@ export class Paginator<TEntitySchema extends EntityBaseSchema> {
   }
 
   public async paginate(
-    builder: SelectQueryBuilder<TEntitySchema>
+    builder: SelectQueryBuilder<TEntitySchema>,
+    queryBuilderCallBack?: (
+      queryBuilder: SelectQueryBuilder<TEntitySchema>
+    ) => SelectQueryBuilder<TEntitySchema>
   ): Promise<SearchResponse<TEntitySchema>> {
     builder = this.appendPagingQuery(builder);
 
-    const entities = await builder.getMany();
+    const qb = queryBuilderCallBack ? queryBuilderCallBack(builder) : builder;
+    const entities = await qb.getMany();
     const hasMore = entities.length > this.request.first;
 
     if (hasMore) {

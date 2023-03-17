@@ -38,7 +38,9 @@ export class TypeormStampedReadRepository<
   async find(
     request: SearchRequest,
     selectionSet?: SelectionSet,
-    initialQueryBuilder?: SelectQueryBuilder<TEntitySchema>
+    queryBuilderCallBack?: (
+      queryBuilder: SelectQueryBuilder<TEntitySchema>
+    ) => SelectQueryBuilder<TEntitySchema>
   ): Promise<SearchResponse<TEntity>> {
     // Make sure at least 1 sort field is present
     if (!request.sort) {
@@ -56,9 +58,9 @@ export class TypeormStampedReadRepository<
     }
 
     // Create QueryBuilder
-    const queryBuilder =
-      initialQueryBuilder ??
-      this.entityModel.createQueryBuilder(this.entityType.name);
+    const queryBuilder = this.entityModel.createQueryBuilder(
+      this.entityType.name
+    );
 
     // Add nested filters
     const expressions = QueryHelper.addFilters(
@@ -104,7 +106,8 @@ export class TypeormStampedReadRepository<
 
     // Pass queryBuilder as parameter to get paginate result.
     const response: SearchResponse<TEntitySchema> = await paginator.paginate(
-      queryBuilder
+      queryBuilder,
+      queryBuilderCallBack
     );
 
     const results: SearchResult<TEntity>[] = response.results.map((result) => {
