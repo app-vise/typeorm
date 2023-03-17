@@ -1,4 +1,4 @@
-import { ObjectType, Repository } from 'typeorm';
+import { ObjectType, Repository, SelectQueryBuilder } from 'typeorm';
 import {
   AggregateRoot,
   Entity,
@@ -37,7 +37,8 @@ export class TypeormReadRepository<
 
   async find(
     request: SearchRequest,
-    selectionSet?: SelectionSet
+    selectionSet?: SelectionSet,
+    initialQueryBuilder?: SelectQueryBuilder<TEntitySchema>
   ): Promise<SearchResponse<TEntity>> {
     // Make sure at least 1 sort field is present
     if (!request.sort) {
@@ -55,9 +56,9 @@ export class TypeormReadRepository<
     }
 
     // Create QueryBuilder
-    const queryBuilder = this.entityModel.createQueryBuilder(
-      this.entityType.name
-    );
+    const queryBuilder =
+      initialQueryBuilder ??
+      this.entityModel.createQueryBuilder(this.entityType.name);
 
     // Add nested filters
     const expressions = QueryHelper.addFilters(
