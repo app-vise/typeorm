@@ -46,6 +46,7 @@ export class QueryHelper {
         } else {
           enum filterTypes {
             'equals' = '=',
+            'notEquals' = '!=',
             'contains' = 'LIKE',
             'iContains' = 'ILIKE',
             'excludes' = 'NOT LIKE',
