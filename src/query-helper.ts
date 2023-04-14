@@ -1,5 +1,5 @@
 import { FilterType } from '@appvise/domain';
-import { Brackets, SelectQueryBuilder } from 'typeorm';
+import { Brackets, ObjectLiteral, SelectQueryBuilder } from 'typeorm';
 import { camelToSnakeCase } from '.';
 
 export class QueryHelper {
