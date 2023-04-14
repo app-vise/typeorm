@@ -1,6 +1,6 @@
 {
   "name": "@appvise/typeorm",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "TypeORM persistence implementation for @appvise/domain package",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -39,7 +39,7 @@
   },
   "homepage": "https://github.com/app-vise/typeorm#readme",
   "dependencies": {
-    "@appvise/domain": "^1.1.0",
+    "@appvise/domain": "^1.1.4",
     "typeorm": "^0.3.10"
   },
   "devDependencies": {

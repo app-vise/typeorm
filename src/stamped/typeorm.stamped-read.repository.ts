@@ -35,6 +35,45 @@ export class TypeormStampedReadRepository<
     protected readonly entityType: ObjectType<TEntitySchema>
   ) {}
 
+  async getCount(
+    request: SearchRequest,
+    selectionSet?: SelectionSet
+  ): Promise<number> {
+    // Create QueryBuilder
+    const queryBuilder = this.entityModel.createQueryBuilder(
+      this.entityType.name
+    );
+
+    // Add nested filters
+    const expressions = QueryHelper.addFilters(
+      request.filter ?? [],
+      queryBuilder
+    );
+
+    // Join with relations if selected
+    for (const relation of this.entityModel.metadata.relations) {
+      // Convert schema key to camel case
+      const camelCaseRelation = snakeToCamelCase(relation.propertyPath);
+
+      if (
+        // Ignore soft relations starting with _
+        relation.propertyPath[0] !== '_' &&
+        (!selectionSet ||
+          selectionSet.isSelected('nodes.' + camelCaseRelation) ||
+          selectionSet.isSelected('edges.node.' + camelCaseRelation))
+      ) {
+        queryBuilder.leftJoinAndSelect(
+          `${this.entityType.name}.${relation.propertyPath}`,
+          relation.propertyPath
+        );
+      }
+    }
+
+    queryBuilder.where(expressions);
+
+    return await queryBuilder.getCount();
+  }
+
   async find(
     request: SearchRequest,
     selectionSet?: SelectionSet,

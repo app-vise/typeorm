@@ -59,6 +59,13 @@ export class TypeormRepository<
     return this.writeRepository.delete(entity);
   }
 
+  getCount(
+    request: SearchRequest,
+    selectionSet?: SelectionSet
+  ): Promise<number> {
+    return this.readRepository.getCount(request, selectionSet);
+  }
+
   find(
     request: SearchRequest,
     selectionSet?: SelectionSet
