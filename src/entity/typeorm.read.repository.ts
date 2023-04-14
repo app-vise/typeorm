@@ -18,6 +18,7 @@ import {
   camelToSnakeCase,
   snakeToCamelCase,
 } from '../index';
+import { CountRequest } from '@appvise/domain';
 
 export class TypeormReadRepository<
   TEntity extends AggregateRoot<unknown> | Entity<unknown>,
@@ -36,7 +37,7 @@ export class TypeormReadRepository<
   ) {}
 
   async getCount(
-    request: SearchRequest,
+    request: CountRequest,
     selectionSet?: SelectionSet
   ): Promise<number> {
     // Create QueryBuilder

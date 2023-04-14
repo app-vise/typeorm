@@ -9,6 +9,7 @@ import {
   SearchResponse,
   SearchResult,
   SortDirection,
+  CountRequest,
 } from '@appvise/domain';
 import {
   EntityBaseStampedSchema,
@@ -36,7 +37,7 @@ export class TypeormStampedReadRepository<
   ) {}
 
   async getCount(
-    request: SearchRequest,
+    request: CountRequest,
     selectionSet?: SelectionSet
   ): Promise<number> {
     // Create QueryBuilder

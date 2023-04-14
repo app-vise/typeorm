@@ -9,6 +9,7 @@ import {
   SearchRequest,
   SearchResponse,
   WriteRepository,
+  CountRequest,
 } from '@appvise/domain';
 import {
   EntityBaseSchema,
@@ -60,7 +61,7 @@ export class TypeormRepository<
   }
 
   getCount(
-    request: SearchRequest,
+    request: CountRequest,
     selectionSet?: SelectionSet
   ): Promise<number> {
     return this.readRepository.getCount(request, selectionSet);
