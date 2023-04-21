@@ -1,1 +1,1 @@
-export { DatabaseManager } from './database-manager';
+export { DatabaseManager, ExtraDBTypes } from './database-manager';
