@@ -1,4 +1,6 @@
+import { UUID } from '@appvise/domain';
+
 export abstract class DatabaseManager {
-  abstract createDatabase(tenantId: string): Promise<string>;
-  abstract deleteDatabase(tenantId: string): Promise<boolean>;
+  abstract createDatabase(tenantId: UUID): Promise<string>;
+  abstract deleteDatabase(tenantId: UUID): Promise<boolean>;
 }
