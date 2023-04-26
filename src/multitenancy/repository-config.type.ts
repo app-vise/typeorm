@@ -1,10 +1,4 @@
-import {
-  EntityStampedSchemaFactory,
-  Type,
-  TypeormStampedReadRepository,
-  TypeormStampedRepository,
-  TypeormStampedWriteRepository,
-} from '..';
+import { EntityStampedSchemaFactory, Type } from '..';
 
 export interface RepositoryConfig {
   // TODO: Make work with types
@@ -19,14 +13,8 @@ export interface RepositoryConfig {
   //   customReadRepository?: typeof TypeormStampedReadRepository<any, any>;
   //   customWriteRepository?: typeof TypeormStampedWriteRepository<any, any>;
   //   customRepository?: typeof TypeormStampedRepository<any, any>;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  customReadRepository?: TypeormStampedReadRepository;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  customWriteRepository?: TypeormStampedWriteRepository;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  customRepository?: TypeormStampedRepository;
+  customReadRepository?: any;
+  customWriteRepository?: any;
+  customRepository?: any;
   asyncDomainEvents?: boolean;
 }
