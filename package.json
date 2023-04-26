@@ -1,6 +1,6 @@
 {
   "name": "@appvise/typeorm",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "TypeORM persistence implementation for @appvise/domain package",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
